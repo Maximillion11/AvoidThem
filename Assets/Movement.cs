@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Transform RelativeObject;
     public float WalkSpeed = 3f;
     public float SideStepSpeed = 2f;
     public float SprintSpeed = 6f;
@@ -11,7 +12,7 @@ public class Movement : MonoBehaviour
     public float DeAccelerationSpeed = 4f;
     private Vector3 currentMoveSpeed;
 
-    private CharacterController cc;
+    private Rigidbody rb;
     public float Stamina = 5f;
     public float StaminaRegenDelay = 2f;
     private float currentStamina;
@@ -22,7 +23,7 @@ public class Movement : MonoBehaviour
 
     private void Awake()
     {
-        cc = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
 
         currentStamina = Stamina;
         currentStaminaRegenDelay = Stamina;
@@ -37,6 +38,11 @@ public class Movement : MonoBehaviour
 
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Move(moveInput);
+    }
+
+    private void FixedUpdate()
+    {
+        rb.AddRelativeForce(new Vector3(0, Physics.gravity.y, 0));
     }
 
     private void Move(Vector3 moveInput)
@@ -75,9 +81,9 @@ public class Movement : MonoBehaviour
         movement.x = currentMoveSpeed.x;
         movement.z = currentMoveSpeed.z;
 
-        movement = transform.TransformDirection(movement);
+        movement = RelativeObject.TransformDirection(movement);
 
-        cc.SimpleMove(movement);
+        rb.position += movement * Time.deltaTime;
 
         if (currentStaminaRegenDelay >= StaminaRegenDelay)
         {

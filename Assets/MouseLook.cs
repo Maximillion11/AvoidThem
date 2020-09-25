@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    public Transform Rotator;
+
     public Vector2 Sensitivity = new Vector2(1f, 1f);
     public float rotationCapY = 80f;
 
@@ -16,7 +18,7 @@ public class MouseLook : MonoBehaviour
         Vector2 playerOutput = new Vector2(0, mouseInput.x * Sensitivity.x);
         Vector2 cameraOutput = new Vector2(-mouseInput.y * Sensitivity.y, 0);
 
-        transform.Rotate(playerOutput);
+        Rotator.Rotate(playerOutput);
 
         if ((rotationCountY < rotationCapY || cameraOutput.x > 0) && (rotationCountY > -rotationCapY || cameraOutput.x < 0))
         {
